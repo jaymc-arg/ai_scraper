@@ -1,0 +1,23 @@
+[project]
+name = "scraper"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4>=4.12.3",
+    "ipykernel>=6.29.5",
+    "langchain-ollama>=0.2.0",
+    "langchain>=0.3.8",
+    "markdownify>=0.14.1",
+    "ollama>=0.4.1",
+    "playwright>=1.49.0",
+    "playwright-stealth>=1.0.6",
+    "pytest>=8.3.3",
+    "setuptools>=75.6.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.3",
+]

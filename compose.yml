@@ -1,0 +1,28 @@
+services:
+  chatgpt:
+    image: ghcr.io/ivanfioravanti/chatbot-ollama:main
+    ports:
+      - 3000:3000
+    environment:
+      - DEFAULT_MODEL=llama2
+      - OLLAMA_HOST=http://ollama:11434
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ./ollama/models:/ollama/models
+    ports:
+      - 11434:11434
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=http://0.0.0.0:11434
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 10s
+    networks:
+      - ollama-network
+networks:
+  ollama-network:
+    driver: bridge
