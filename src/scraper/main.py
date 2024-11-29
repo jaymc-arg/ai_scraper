@@ -38,13 +38,13 @@ class WebScraper:
             browser.close()
         return html_content
 
-    def extract_body(self, raw_html: str) -> str:
+    def extract_body(self, raw_html: str) -> BeautifulSoup:
         soup = BeautifulSoup(raw_html, "html.parser")
 
         body_content = soup.body
 
         if body_content:
-            return str(body_content)
+            return body_content
         return ""
 
     def clean_data(self, raw_html: str) -> str:
@@ -54,12 +54,49 @@ class WebScraper:
         if body_content == "":
             raise FileNotFoundError("No body content found in the provided HTML.")
 
-        soup = BeautifulSoup(body_content, "html.parser")
+        # for script_or_style in soup(["script", "style"]):
+        #     script_or_style.extract()
 
-        for script_or_style in soup(["script", "style"]):
-            script_or_style.extract()
+        for tag in body_content(["script", "style", "meta", "link", "noscript"]):
+            tag.decompose()
 
-        cleaned_content = soup.get_text(separator="\n", strip=True)
+        relevant_tags = ["div", "section", "article", "li", "span", "a"]
+        for tag in body_content.find_all(True):
+            if tag.name not in relevant_tags:
+                tag.decompose()
+
+        for tag in body_content.find_all(True):  # Loop through all tags
+            for attribute in [
+                "style",
+                # "class",
+                # "id",
+                "onclick",
+                "data-*",
+            ]:  # Add others if needed
+                if attribute in tag.attrs:
+                    del tag[attribute]
+
+        # Remove tags with little or no meaningful content
+
+        for tag in body_content.find_all(True):
+            if not tag.get_text(strip=True):  # Remove empty tags
+                tag.decompose()
+            elif len(tag.get_text(strip=True)) < 5:  # Remove tags with very little text
+                tag.decompose()
+
+        for tag in body_content.find_all(True):
+            if len(tag.contents) == 1 and tag.contents[0].name:
+                tag.unwrap()
+
+        for tag in body_content.find_all(True):
+            if tag.name in {"img", "br"}:
+                tag.decompose()
+
+        # Normalize whitespace
+        cleaned_html = body_content.prettify()
+        cleaned_html = " ".join(cleaned_html.split())  # Remove excessive spaces
+
+        # cleaned_content = soup.get_text(separator="\n", strip=True)
         # print(cleaned_content)
         # cleaned_content = "\n".join(
         #     line.strip() for line in cleaned_content.splitlines() if line.strip()
@@ -67,7 +104,7 @@ class WebScraper:
 
         # print(">>>>>>>>>>>>>", cleaned_content)
 
-        return cleaned_content
+        return str(body_content)
 
         # # TODO recibir url de scrape_page y validar de que web se esta escrapeando
 
