@@ -9,12 +9,9 @@ def main():
     splited_dom = split_dom_content(parsed["extracted_data"])
     print(splited_dom[0])
 
-    parse_description = """parse the html and give me attribute name and type in a json format to replace in the following function:
-    soup.find_all("div", attrs={"attribute_type": "attribute_name"})
-    the selected element should contain the information of **all** the properties in the DOM. take in consideration you are not given the hole DOM.
-    """
+    parse_description = """identify the html element, by it's attribute, that contains all the relevant information of a single property. i only want the attribute name."""
 
-    ollama_parsed = parse_with_ollama(splited_dom[0:2], parse_description)
+    ollama_parsed = parse_with_ollama(splited_dom[2:4], parse_description)
 
     print(ollama_parsed)
 
