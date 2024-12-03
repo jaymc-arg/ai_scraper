@@ -7,10 +7,11 @@ def main():
     parsed = query_web_scraper("https://www.zonaprop.com.ar/inmuebles-venta.html")
 
     splited_dom = split_dom_content(parsed["extracted_data"])
+    print(splited_dom[0])
 
-    parse_description = "for each publication extract the price of the house, currency, m2, complete address"
+    parse_description = """identify the html element, by it's attribute, that contains all the relevant information of a single property. i only want the attribute name."""
 
-    ollama_parsed = parse_with_ollama(splited_dom, parse_description)
+    ollama_parsed = parse_with_ollama(splited_dom[2:4], parse_description)
 
     print(ollama_parsed)
 
