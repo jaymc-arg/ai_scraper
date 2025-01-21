@@ -70,12 +70,13 @@ class WebScraper:
             "a",
         ]
         for tag in body_content.find_all(True):
-            if tag.name not in relevant_tags and not any(
-                child.name in relevant_tags for child in tag.descendants
+            if tag.name not in relevant_tags and not any(  # si es el tag no es relevate
+                child.name in relevant_tags
+                for child in tag.descendants  # y tampoco tiene ningun hijo relevante
             ):
                 tag.decompose()
 
-        for tag in body_content.find_all(True):  # Loop through all tags
+        for tag in body_content.find_all(True):
             for attribute in [
                 "style",
                 # "class",
@@ -88,16 +89,18 @@ class WebScraper:
 
         for tag in body_content.find_all(True):
             if not (
-                tag.get_text(strip=True)
+                tag.get_text(strip=True)  # si el tag no tiene texto
                 or any(
-                    child.get_text(strip=True)
+                    child.get_text(
+                        strip=True
+                    )  # o ninguno de sus hijos con la propiedad 'name' tampoco tiene texto
                     for child in tag.descendants
                     if child.name
                 )
             ):
                 tag.decompose()
 
-        for tag in body_content.find_all(True):  # Iterate through all tags
+        for tag in body_content.find_all(True):  # reductor de codigo html!!!
             # Check if the tag has exactly one child and no text of its own
             while (
                 len(tag.contents) == 1 and tag.contents[0].name
@@ -110,7 +113,7 @@ class WebScraper:
         cleaned_html = body_content.prettify()
         cleaned_html = " ".join(cleaned_html.split())  # Remove excessive spaces
 
-        print(body_content.prettify())
+        # print(body_content.prettify())
 
         return str(body_content)
 

@@ -7,7 +7,7 @@ template = (
     "1. **Extract Information:** Only extract the information that directly matches the provided description: {{parse_description}}."
     "2. **No Extra Content:** Do not include any additional text, comments, or explanations in your response. "
     "3. **Empty Response:** If no information matches the description, return an empty string ('')."
-    "4. **Direct Data Only:** Your output should contain only the html attribute that corresponds"
+    "4. **Direct Data Only:** Your output must contain only the html attribute that is asked for"
 )
 
 
